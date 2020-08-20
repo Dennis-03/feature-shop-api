@@ -45,16 +45,15 @@ database = zenv.DB_LOCATION
 def create_fs_user_table_schema(conn):
     cur = conn.cursor()
     sql = ''' CREATE TABLE "fs_user" (
-	"fsuid"	INTEGER NOT NULL,
-	"userid"	INTEGER NOT NULL,
+	"fsuid"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"user_name"	TEXT NOT NULL,
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT,
 	"location"	TEXT,
 	"country"	TEXT,
 	"registered_at"	TEXT,
-	"updated_at"	TEXT,
-	PRIMARY KEY("fsuid" AUTOINCREMENT)
-    );  '''
+	"updated_at"	TEXT
+); '''
 
     try:
         cur.execute(sql)
@@ -103,9 +102,17 @@ def create_fs_team_members_table_schema(conn):
     print("fs_team_members table created successfully")
 
 
-def create__table_schema(conn):
+def create_fs_feature_table_schema(conn):
     cur = conn.cursor()
-    sql = '''  '''
+    sql = ''' CREATE TABLE "fs_feature" (
+	"fsfeatureid"	INTEGER NOT NULL,
+	"title"	TEXT NOT NULL UNIQUE,
+	"content"	TEXT NOT NULL,
+	"created_by"	TEXT,
+	"created_at"	TEXT,
+	"updated_at"	TEXT,
+	PRIMARY KEY("fsfeatureid" AUTOINCREMENT)
+); '''
 
     try:
         cur.execute(sql)
@@ -113,11 +120,19 @@ def create__table_schema(conn):
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
     
-    print("fs_ table created successfully")
+    print("fs_feature table created successfully")
 
-def create__table_schema(conn):
+def create_fs_feature_holder_table_schema(conn):
     cur = conn.cursor()
-    sql = '''  '''
+    sql = ''' CREATE TABLE "fs_feature_holder" (
+	"fsfhid"	INTEGER NOT NULL,
+	"team_id"	INTEGER NOT NULL,
+	"feature_id"	INTEGER NOT NULL,
+	"added_at"	TEXT,
+	"status"	TEXT,
+	PRIMARY KEY("fsfhid" AUTOINCREMENT)
+);
+ '''
 
     try:
         cur.execute(sql)
@@ -125,31 +140,26 @@ def create__table_schema(conn):
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
     
-    print("fs_ table created successfully")
+    print("fs_feature_holder table created successfully")
 
-def create__table_schema(conn):
+def create_fs_tact_coins_table_schema(conn):
     cur = conn.cursor()
-    sql = '''  '''
-
+    sql = ''' CREATE TABLE "fs_tact_coins" (
+	"fstcid"	INTEGER NOT NULL,
+	"team_id"	INTEGER NOT NULL,
+	"feature_id"	INTEGER NOT NULL,
+	"feature_coins"	INTEGER NOT NULL,
+	"status"	TEXT,
+	PRIMARY KEY("fstcid" AUTOINCREMENT)
+); '''
+    
     try:
         cur.execute(sql)
 
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
     
-    print("fs_ table created successfully")
-
-def create__table_schema(conn):
-    cur = conn.cursor()
-    sql = '''  '''
-
-    try:
-        cur.execute(sql)
-
-    except sqlite3.IntegrityError as sqle:
-        return("SQLite error : {0}".format(sqle))
-    
-    print("fs_ table created successfully")
+    print("fs_tact_coins table created successfully")
 
 
 '''SCHEMA ENDED '''
@@ -190,6 +200,66 @@ def create__table_schema(conn):
 
 #     return -1
 
+def insert_into_fs_user(conn,fs_user_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_user (
+		user_name,
+		email,
+		password,
+		location,
+		country,
+		registered_at,
+		updated_at)
+              VALUES (
+        :user_name,
+		:email,
+		:password,
+		:location,
+		:country,
+		:registered_at,
+		:updated_at) ''' 
+    
+    try:
+        cur.execute(sql,fs_user_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_user Inserted successfully")
+
+def insert_into_fs_team(conn,fs_team_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_team (
+		team_name,
+		added_at,
+		updated_at)
+              VALUES (
+        :team_name,
+		:added_at,
+		:updated_at) ''' 
+    
+    try:
+        cur.execute(sql,fs_team_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_team Inserted successfully")
+
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
 #     id = get_actor_id(conn,artist_obj['name'])
@@ -208,7 +278,6 @@ def create__table_schema(conn):
 #         return("SQLite error : {0}".format(sqle))
     
 #     print("AS Inserted successfully")
-
 
 # def insert_into_public_artist(conn,public_artist_obj):
 #     print(artist_obj['name'])
@@ -358,19 +427,33 @@ def main():
         # current_date = datetime.date.today()
         # date = current_date.strftime("%d-%m-%Y")
 
-        # artist_obj = {
-        #     'name': 'Dhanush',
-        #     'year': 2022,
-        #     'c_score': 85,
-        #     'a_score': 90,
-        #     'b_score': 88,
-        #     'user_ip': '',
-        #     'user_id': '',
-        #     'updated_at': date
+        # fs_user_obj = {
+        
+		# 'user_name' : 'Sameena' , 
+		# 'email' : 'sameena23@gmail.com' ,
+		# 'password': '124' ,
+		# 'location' : 'Toronto',
+		# 'country' : 'Cannada',
+		# 'registered_at' : '13-08-2020',
+		# 'updated_at' : '15-08-2020'
         # }
-        # print("Insert stmt test")
-        # insert_into_artist_score(conn, artist_obj)
+        # #print("Insert stmt test")
+        # insert_into_fs_user(conn, fs_user_obj)
 
+
+        for i in range(6):
+            
+            team_name = input('team name : ')
+            added_at = input('added at :')
+            updated_at = input('updated at :')
+            fs_team_obj = {
+            
+            'team_name' : team_name,
+            'added_at' : added_at,
+            'updated_at' : updated_at
+            }
+            #print("Insert stmt test")
+            insert_into_fs_team(conn, fs_team_obj)
         
         # CREATE
         # :artist_name, :coartist_category, :coartist_name, :bubble_score

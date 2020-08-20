@@ -1,7 +1,7 @@
 FS table:
 	fs_user
 		fsuid
-		userid
+		user_name
 		email
 		password
 		location

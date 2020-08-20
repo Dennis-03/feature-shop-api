@@ -6,15 +6,14 @@ DELETE FROM fs_user;
 DROP TABLE fs_user;
 
 CREATE TABLE "fs_user" (
-	"fsuid"	INTEGER NOT NULL,
-	"userid"	INTEGER NOT NULL,
+	"fsuid"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"user_name"	TEXT NOT NULL,
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT,
 	"location"	TEXT,
 	"country"	TEXT,
 	"registered_at"	TEXT,
-	"updated_at"	TEXT,
-	PRIMARY KEY("fsuid" AUTOINCREMENT)
+	"updated_at"	TEXT
 );
 
 
