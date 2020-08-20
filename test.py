@@ -260,6 +260,62 @@ def insert_into_fs_team(conn,fs_team_obj):
     
     print("fs_team Inserted successfully")
 
+
+def insert_into_fs_team_members(conn,fs_team_members_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_team_members (
+		team_id,
+		member_id,
+		added_at)
+              VALUES (
+        :team_id,
+		:member_id,
+		:added_at) ''' 
+    
+    try:
+        cur.execute(sql,fs_team_members_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_team_members Inserted successfully")
+
+def insert_into_fs_feature(conn,fs_feature_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_feature (
+		title,
+		content,
+		created_by,
+		created_at,
+		updated_at)
+        VALUES (
+        :title,
+		:content,
+		:created_by,
+		:created_at,
+		:updated_at) ''' 
+    
+    try:
+        cur.execute(sql,fs_feature_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_feature Inserted successfully")
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
 #     id = get_actor_id(conn,artist_obj['name'])
@@ -441,19 +497,53 @@ def main():
         # insert_into_fs_user(conn, fs_user_obj)
 
 
+        # for i in range(6):
+            
+        #     team_name = input('team name : ')
+        #     added_at = input('added at :')
+        #     updated_at = input('updated at :')
+        #     fs_team_obj = {
+            
+        #     'team_name' : team_name,
+        #     'added_at' : added_at,
+        #     'updated_at' : updated_at
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_team(conn, fs_team_obj)
+
+        # for i in range(6):
+            
+        #     team_id = input('team id : ')
+        #     member_id = input('member id :')
+        #     added_at = input('added at :')
+        #     fs_team_members_obj = {
+            
+        #     'team_id' : team_id,
+        #     'member_id' : member_id,
+        #     'added_at' : added_at,
+            
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_team_members(conn, fs_team_members_obj)
+
         for i in range(6):
             
-            team_name = input('team name : ')
-            added_at = input('added at :')
-            updated_at = input('updated at :')
-            fs_team_obj = {
+            title = input('title : ')
+            content = input('content :')
+            created_by = input('created by:')
+            created_at = input('created at :')
+            updated_at = input('updated at:')
+            fs_feature_obj = {
             
-            'team_name' : team_name,
-            'added_at' : added_at,
+            'title' : title,
+            'content' : content,
+            'created_by' : created_by,
+            'created_at' : created_at,
             'updated_at' : updated_at
+            
             }
             #print("Insert stmt test")
-            insert_into_fs_team(conn, fs_team_obj)
+            insert_into_fs_feature(conn, fs_feature_obj)
         
         # CREATE
         # :artist_name, :coartist_category, :coartist_name, :bubble_score
