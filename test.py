@@ -315,7 +315,149 @@ def insert_into_fs_feature(conn,fs_feature_obj):
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
     
-    print("fs_feature Inserted successfully")
+    print("fs_feature_holder Inserted successfully")
+
+def insert_into_fs_feature_holder(conn,fs_feature_holder_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_feature_holder (
+		team_id,
+		feature_id,
+		added_at,
+		status )
+        VALUES (
+        :team_id,
+		:feature_id,
+		:added_at,
+		:status 
+        ) ''' 
+    
+    try:
+        cur.execute(sql,fs_feature_holder_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_feature_holder Inserted successfully")
+
+def insert_into_fs_tact_coins(conn,fs_tact_coins_obj):
+   # print(artist_obj['name'])
+    
+    #id = get_actor_id(conn,artist_obj['name'])
+
+    cur = conn.cursor()
+
+    #artist_obj['id'] = id
+
+    sql = ''' INSERT INTO fs_tact_coins (
+		team_id,
+		feature_id,
+		feature_coins,
+		status )
+        VALUES (
+        :team_id,
+		:feature_id,
+		:feature_coins,
+		:status 
+        ) ''' 
+    
+    try:
+        cur.execute(sql,fs_tact_coins_obj)
+
+    except sqlite3.IntegrityError as sqle:
+        return("SQLite error : {0}".format(sqle))
+    
+    print("fs_tact_coins Inserted successfully")
+
+
+def get_tact_coins_collected_by_team_name(conn,team_name):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select team_name,feature_coins from 
+            (select fs_team.team_name, fs_tact_coins.feature_coins
+            from fs_team inner join fs_tact_coins 
+            on fs_team.fsteamid = fs_tact_coins.team_id 
+            where fs_tact_coins.status = 'done') where team_name = :team_name;  '''
+    
+    team_obj = {
+        'team_name': team_name
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, team_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available , May be Pending !!')
+        return -1
+    
+    total_coins = 0
+
+    print(rows)
+
+    for row in rows:
+        total_coins += row[1]
+
+    return total_coins
+
+
+
+def find_pending_coins_for_team(conn,team_name):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select team_name,feature_coins from 
+            (select fs_team.team_name, fs_tact_coins.feature_coins
+            from fs_team inner join fs_tact_coins 
+            on fs_team.fsteamid = fs_tact_coins.team_id 
+            where fs_tact_coins.status = 'pending') where team_name = :team_name;  '''
+    
+    team_obj = {
+        'team_name': team_name
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, team_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available , May be no Pending !!')
+        return -1
+    
+    total_coins = 0
+
+    print(rows)
+
+    for row in rows:
+        total_coins += row[1]
+
+    return total_coins
+
+
+
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
 #     id = get_actor_id(conn,artist_obj['name'])
@@ -477,6 +619,10 @@ def main():
     conn = db_con.create_connection(database)
 
     with conn:
+        team_name = input("Team_name: ")
+        coins = get_tact_coins_collected_by_team_name(conn,team_name)
+        # coins = find_pending_coins_for_team(conn,team_name)
+        print(coins)
         #print("TEST-select all movies ")
         #select_all_movies_1(conn)
         
@@ -526,24 +672,58 @@ def main():
         #     #print("Insert stmt test")
         #     insert_into_fs_team_members(conn, fs_team_members_obj)
 
-        for i in range(6):
+        # for i in range(6):
             
-            title = input('title : ')
-            content = input('content :')
-            created_by = input('created by:')
-            created_at = input('created at :')
-            updated_at = input('updated at:')
-            fs_feature_obj = {
+        #     title = input('title : ')
+        #     content = input('content :')
+        #     created_by = input('created by:')
+        #     created_at = input('created at :')
+        #     updated_at = input('updated at:')
+        #     fs_feature_obj = {
             
-            'title' : title,
-            'content' : content,
-            'created_by' : created_by,
-            'created_at' : created_at,
-            'updated_at' : updated_at
+        #     'title' : title,
+        #     'content' : content,
+        #     'created_by' : created_by,
+        #     'created_at' : created_at,
+        #     'updated_at' : updated_at
             
-            }
-            #print("Insert stmt test")
-            insert_into_fs_feature(conn, fs_feature_obj)
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_feature(conn, fs_feature_obj)
+        # for i in range(6):
+            
+        #     team_id = input('team_id : ')
+        #     feature_id = input('feature_id :')
+        #     added_at = input('added_at:')
+        #     status = input('status :')
+            
+        #     fs_feature_holder_obj = {
+            
+        #     'team_id' : team_id,
+        #     'feature_id' : feature_id,
+        #     'added_at' : added_at,
+        #     'status' : status
+            
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_feature_holder(conn, fs_feature_holder_obj)
+        # for i in range(6):
+            
+        #     team_id = input('team_id : ')
+        #     feature_id = input('feature_id :')
+        #     feature_coins = input('feature_coins:')
+        #     status = input('status :')
+            
+        #     fs_tact_coins_obj = {
+            
+        #     'team_id' : team_id,
+        #     'feature_id' : feature_id,
+        #     'feature_coins' : feature_coins,
+        #     'status' : status
+            
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_tact_coins(conn, fs_tact_coins_obj)
         
         # CREATE
         # :artist_name, :coartist_category, :coartist_name, :bubble_score

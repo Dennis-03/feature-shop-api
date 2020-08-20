@@ -45,8 +45,8 @@ FS table:
 		
 	need to get:
 		How much tact coins user-XYZ collected?
-		How much tact coins team-ABC collected?
-		How much do we owe to team-ABC which has to be released soon?
+		How much tact coins team-ABC collected? - DONE
+		How much do we owe to team-ABC which has to be released soon? - DONE
 		Which team collected max coins in this week?
 		
 --------/
