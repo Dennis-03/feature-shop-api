@@ -426,11 +426,10 @@ def find_pending_coins_for_team(conn,team_name):
     # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
     # """
     
-    sql = ''' select team_name,feature_coins from 
-            (select fs_team.team_name, fs_tact_coins.feature_coins
-            from fs_team inner join fs_tact_coins 
-            on fs_team.fsteamid = fs_tact_coins.team_id 
-            where fs_tact_coins.status = 'pending') where team_name = :team_name;  '''
+    sql = ''' select fs_team.team_name as Team , fs_tact_coins.feature_coins as TotalAmount from fs_team 
+              inner join fs_tact_coins on fs_team.fsteamid = fs_tact_coins.team_id 
+              where fs_tact_coins.status = 'pending' and fs_team.team_name = :team_name and fs_tact_coins.feature_id IN 
+              (select fs_feature_holder.feature_id from fs_feature_holder where fs_feature_holder.status = 'Completed');  '''
     
     team_obj = {
         'team_name': team_name
@@ -457,6 +456,101 @@ def find_pending_coins_for_team(conn,team_name):
     return total_coins
 
 
+def find_max_coins_collected_in_week_by_team(conn,start_date,end_date):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select team_id,sum(feature_coins) as fc from fs_tact_coins 
+              inner join fs_feature on fsfeatureid = feature_id where updated_at between :start_date and :end_date and fs_tact_coins.status = 'done'
+              group by team_id order by fc DESC; '''
+    
+    date_obj = {
+        'start_date' : start_date ,
+        'end_date' : end_date
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, date_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available , May be no Pending !!')
+        return -1
+    
+    print(rows)
+ 
+    res = []
+    max_coins = rows[0][1]
+    for row in rows:
+        if row[1] == max_coins:
+            team_id = row[0]
+            team_name = get_team_name_by_id(conn,team_id)
+            res.append(team_name)
+
+    return res
+
+def get_team_name_by_id(conn,team_id):
+
+    cur = conn.cursor()
+
+    sql = '''
+          select team_name from fs_team where fsteamid = :team_id;
+          '''
+    id_obj = {
+        'team_id' : team_id
+    }
+
+    cur.execute(sql, id_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+    
+    return rows[0][0]
+
+
+def get_number_of_features_in_period_of_time(conn,start_date,end_date):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select count(fsfeatureid) as feature_count from fs_feature where created_at BETWEEN :start_date and :end_date '''
+    
+    date_obj = {
+        'start_date' : start_date ,
+        'end_date' : end_date
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, date_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available !!')
+        return -1
+    
+    #print(rows[0][0])
+
+    return rows[0][0]
 
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
@@ -619,12 +713,23 @@ def main():
     conn = db_con.create_connection(database)
 
     with conn:
-        team_name = input("Team_name: ")
-        coins = get_tact_coins_collected_by_team_name(conn,team_name)
+
+        # team_name = input("Team_name: ")
+        #coins = get_tact_coins_collected_by_team_name(conn,team_name)
         # coins = find_pending_coins_for_team(conn,team_name)
-        print(coins)
+        # print(coins)
         #print("TEST-select all movies ")
         #select_all_movies_1(conn)
+
+        start_date = input('Start Date : ')
+        end_date = input('End Date : ')
+        # result = find_max_coins_collected_in_week_by_team(conn,start_date,end_date)
+        # print('Teams which collected maximum coins in this week : ', result)
+
+        result = get_number_of_features_in_period_of_time(conn,start_date,end_date)
+        print('Number of features in a particular period of time : ',result)
+
+        
         
         # current_date = datetime.date.today()
         # date = current_date.strftime("%d-%m-%Y")
@@ -638,9 +743,31 @@ def main():
 		# 'country' : 'Cannada',
 		# 'registered_at' : '13-08-2020',
 		# 'updated_at' : '15-08-2020'
-        # }
+        # # }
         # #print("Insert stmt test")
         # insert_into_fs_user(conn, fs_user_obj)
+
+        # for i in range(6):
+
+        #     user_name = input('user_name : ')
+        #     email = input('email : ')
+        #     password = input('password : ')
+        #     location = input('location : ')
+        #     country = input('country : ')
+        #     registered_at = input('registered_at : ')
+        #     updated_at = input('updated_at : ')
+        #     fs_user_obj = {
+            
+        #     'user_name' : user_name , 
+		#     'email' : email,
+		#     'password':password ,
+		#     'location' : location,
+		#     'country' : country,
+		#     'registered_at' : registered_at,
+		#     'updated_at' : updated_at
+        #     }
+        #     #print("Insert stmt test")
+        #     insert_into_fs_user(conn, fs_user_obj)
 
 
         # for i in range(6):
