@@ -567,7 +567,7 @@ def get_total_number_of_features(conn):
         return -1
     return rows[0][0]
 
-def get_teams_of_a_user(conn,user_name):
+def get_teams_of_a_user(conn,user_id):
     
     # sql = """
     # SELECT
@@ -578,11 +578,13 @@ def get_teams_of_a_user(conn,user_name):
     
     
     sql = ''' select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
-              where fs_team_members.member_id = (select fs_user.fsuid 
-              from fs_user where fs_user.user_name = :user_name); '''
+              where fs_team_members.member_id = :user_id  '''
+    # sql = ''' select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
+    #           where fs_team_members.member_id = (select fs_user.fsuid 
+    #           from fs_user where fs_user.user_name = :user_name); '''          
     
     user_obj = {
-        'user_name' : user_name
+        'user_id' : user_id
     }
 
     cur = conn.cursor()
@@ -595,7 +597,11 @@ def get_teams_of_a_user(conn,user_name):
     if(len(rows) <= 0):
         print('No Data available !!')
         return -1
-    return rows
+    result = []
+    for row in rows:
+        result.append(row[0])
+    return result
+
     #print(rows[0][0])
 
 def get_number_of_features_completed_for_all_teams(conn):
@@ -686,6 +692,24 @@ def get_members_of_team(conn,team_name):
     #print(rows[0][0])
     #print('Inside Func : ',rows)
     return rows
+
+# select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status,fs_feature.created_at from fs_feature;
+
+def get_all_features(conn):
+    
+    sql = ''' select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status,fs_feature.created_at from fs_feature; '''
+
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    return rows
+
 
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])

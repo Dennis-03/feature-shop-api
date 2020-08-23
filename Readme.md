@@ -42,12 +42,20 @@ FS table:
 		feature_id
 		feature_coins
 		status
+
+Top 4 APIs
+
+1. login API - username , pass
+2. Show All features - DONE ( api: http://127.0.0.1:5000/api/get-all-features )
+3. show user features by user id - display status 
+4. show user teams by user ids - DONE ( api: http://127.0.0.1:5000/api/get-teams-of-member/<user_id> )
 		
-	need to get:
-		How much tact coins user-XYZ collected?
-		How much tact coins team-ABC collected? - DONE
-		How much do we owe to team-ABC which has to be released soon? - DONE
-		Which team collected max coins in this week?
+Need to get:
+
+1. How much tact coins user-XYZ collected?
+2. How much tact coins team-ABC collected? - DONE
+3. How much do we owe to team-ABC which has to be released soon? - DONE
+4. Which team collected max coins in this week?
 		
 --------/
 
