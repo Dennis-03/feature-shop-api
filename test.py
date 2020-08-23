@@ -552,6 +552,91 @@ def get_number_of_features_in_period_of_time(conn,start_date,end_date):
 
     return rows[0][0]
 
+def get_total_number_of_features(conn):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select count(fsfeatureid) as feature_count from fs_feature'''
+    
+
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available !!')
+        return -1
+    
+    #print(rows[0][0])
+
+    return rows[0][0]
+
+def get_number_of_features_completed_for_all_teams(conn):
+    
+    sql = ''' select team_name,count(feature_id) as feature_count from fs_team inner join 
+              fs_feature_holder on fsteamid = team_id group by team_id having status = 'Completed'; '''
+    
+    cur = conn.cursor()
+    cur.execute(sql)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available !!')
+        return -1
+
+    return rows
+
+def get_number_of_features_completed_by_team_name(conn,team_name):
+    sql = ''' select count(fs_feature_holder.feature_id) as feature_count from fs_team inner join fs_feature_holder on fs_team.fsteamid = fs_feature_holder.team_id group by fs_feature_holder.team_id having fs_feature_holder.status = 'Completed' and fs_team.team_name = :team_name '''
+    
+    cur = conn.cursor()
+    name_obj = {
+        'team_name' : team_name
+    }
+
+    cur.execute(sql, name_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+    
+    return rows[0][0]
+
+
+def get_tact_coins_by_feature_name(conn,feature_name):
+    sql = ''' select feature_coins from fs_tact_coins join fs_feature on fs_feature.fsfeatureid = fs_tact_coins.feature_id where title = :feature_name; '''
+    
+    cur = conn.cursor()
+    feature_obj = {
+        'feature_name' : feature_name
+    }
+
+    cur.execute(sql, feature_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+    
+    return rows[0][0]
+
+
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
 #     id = get_actor_id(conn,artist_obj['name'])
@@ -721,13 +806,31 @@ def main():
         #print("TEST-select all movies ")
         #select_all_movies_1(conn)
 
-        start_date = input('Start Date : ')
-        end_date = input('End Date : ')
+        # start_date = input('Start Date : ')
+        # end_date = input('End Date : ')
         # result = find_max_coins_collected_in_week_by_team(conn,start_date,end_date)
         # print('Teams which collected maximum coins in this week : ', result)
 
-        result = get_number_of_features_in_period_of_time(conn,start_date,end_date)
-        print('Number of features in a particular period of time : ',result)
+        # result = get_number_of_features_in_period_of_time(conn,start_date,end_date)
+        # print('Number of features in a particular period of time : ',result)
+
+        # result = get_total_number_of_features(conn)
+        # print('Total number of features : ',result)
+
+        # result = get_number_of_features_completed_for_all_teams(conn)
+        # print('Total number of features : ',result)
+        # team_name = input("Team name: ")
+
+        # result = get_number_of_features_completed_by_team_name(conn, team_name)
+        # print(result)
+
+        feature_name = input("Feature title: ")
+
+        # result = get_team_name_by_feature_name(conn, feature_name)
+        # print(result)
+
+        result = get_tact_coins_by_feature_name(conn, feature_name)
+        print(result)
 
         
         
