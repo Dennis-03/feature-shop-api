@@ -710,6 +710,49 @@ def get_all_features(conn):
 
     return rows
 
+def get_features_of_user(conn,user_id):
+    
+    sql = ''' select fs_feature.title, fs_feature_holder.status from fs_feature inner join 
+              fs_feature_holder on fs_feature.fsfeatureid=fs_feature_holder.feature_id where 
+              fs_feature.fsfeatureid in (select fs_feature_holder.feature_id from fs_feature_holder 
+              where fs_feature_holder.team_id in (select fs_team_members.team_id from fs_team_members 
+              where fs_team_members.member_id = :user_id)); '''
+
+    user_obj = {
+        'user_id' : user_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    return rows
+
+def authenticate_user(conn, email, password):
+    
+    sql = ''' select fsuid,user_name from fs_user where email=:email and password=:password '''
+
+    user_cred_obj = {
+        'email' : email,
+        'password' : password
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_cred_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('Invalid credentials')
+        return -1,None
+
+    return rows[0][0],rows[0][1]
+
 
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])

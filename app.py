@@ -22,7 +22,7 @@ def get_db_conn():
 
 
 '''
-http://127.0.0.1:5000/api/get-teams-of-member
+http://127.0.0.1:5000/api/get-teams-of-member/2
 
 '''
 
@@ -64,6 +64,54 @@ def get_all_features_from_db():
     return make_response(jsonify(res), 200)
 
 
+'''
+http://127.0.0.1:5000/api/get-features/2
+
+'''
+
+@app.route("/api/get-features/<user_id>", methods=['GET'])
+def get_features_of_user(user_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_features_of_user(conn,user_id)
+
+    res = {
+        "features": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/login
+
+'''
+
+@app.route("/api/login", methods=['POST'])
+def login():
+    # result = bc.select_all(get_db())
+    email = request.form['email']
+    password = request.form['password']
+    conn = get_db_conn()
+    user_id, user_name = fvc.authenticate_user(conn, email, password)
+
+    if(user_id == -1):
+        authenticated = 'Invalid Credentials'
+    else:
+        authenticated = 'Authentication successful'
+        
+    res = {
+        "user_name": user_name,
+        "user_id": user_id,
+        "authenticated": authenticated
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
 
 # '''
 # http://0.0.0.0:5001/start

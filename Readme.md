@@ -45,9 +45,9 @@ FS table:
 
 Top 4 APIs
 
-1. login API - username , pass
+1. login API - username , pass -DONE ( api: http://127.0.0.1:5000/api/login )
 2. Show All features - DONE ( api: http://127.0.0.1:5000/api/get-all-features )
-3. show user features by user id - display status 
+3. show user features by user id - display status  - DONE (api: http://127.0.0.1:5000/api/get-features/<user_id>)
 4. show user teams by user ids - DONE ( api: http://127.0.0.1:5000/api/get-teams-of-member/<user_id> )
 		
 Need to get:
@@ -55,7 +55,7 @@ Need to get:
 1. How much tact coins user-XYZ collected?
 2. How much tact coins team-ABC collected? - DONE
 3. How much do we owe to team-ABC which has to be released soon? - DONE
-4. Which team collected max coins in this week?
+4. Which team collected max coins in this week? - DONE
 		
 --------/
 
@@ -157,8 +157,9 @@ select fs_user.user_name from fs_user inner join fs_team_members on fs_user.fsui
 
 ---------------------------------------------------------------------------------------------/
 
+Get features by user id
 
-
+select fs_feature.title, fs_feature_holder.status from fs_feature inner join fs_feature_holder on fs_feature.fsfeatureid=fs_feature_holder.feature_id where fs_feature.fsfeatureid in (select fs_feature_holder.feature_id from fs_feature_holder where fs_feature_holder.team_id in (select fs_team_members.team_id from fs_team_members where fs_team_members.member_id = 3))
 ---------------------------------------------------------------------------------------------/
 
 
