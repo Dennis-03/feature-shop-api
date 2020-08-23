@@ -708,7 +708,16 @@ def get_all_features(conn):
         print('No Data available')
         return -1
 
-    return rows
+    results =[]
+    for row in rows:
+        result = {
+            'fsfeatureid': row[0],
+            'title': row[1],
+            'status': row[2],
+            'created_at': row[3]
+        }
+        results.append(result)
+    return results
 
 def get_features_of_user(conn,user_id):
     
@@ -731,7 +740,14 @@ def get_features_of_user(conn,user_id):
         print('No Data available')
         return -1
 
-    return rows
+    results =[]
+    for row in rows:
+        result = {
+            'title': row[0],
+            'status': row[1]
+        }
+        results.append(result)
+    return results
 
 def authenticate_user(conn, email, password):
     

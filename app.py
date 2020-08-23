@@ -92,8 +92,8 @@ http://127.0.0.1:5000/api/login
 @app.route("/api/login", methods=['POST'])
 def login():
     # result = bc.select_all(get_db())
-    email = request.form['email']
-    password = request.form['password']
+    email = request.json['email']
+    password = request.json['password']
     conn = get_db_conn()
     user_id, user_name = fvc.authenticate_user(conn, email, password)
 
