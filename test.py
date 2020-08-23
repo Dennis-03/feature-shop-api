@@ -552,6 +552,71 @@ def get_number_of_features_in_period_of_time(conn,start_date,end_date):
 
     return rows[0][0]
 
+
+def get_teams_of_a_user(conn,user_name):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
+              where fs_team_members.member_id = (select fs_user.fsuid 
+              from fs_user where fs_user.user_name = :user_name); '''
+    
+    user_obj = {
+        'user_name' : user_name
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available !!')
+        return -1
+    
+    #print(rows[0][0])
+    #print('Inside Func : ',rows)
+    return rows
+
+
+def get_members_of_team(conn,team_name):
+    
+    # sql = """
+    # SELECT
+	#     PA.AID AS 'ARTIST_ID'
+    # FROM PUBLIC_ARTIST PA
+    # WHERE PA.ARTIST_NAME = :actor_name COLLATE NOCASE;
+    # """
+    
+    sql = ''' select fs_user.user_name from fs_user inner join fs_team_members on fs_user.fsuid = fs_team_members.member_id 
+              where fs_team_members.team_id = (select fs_team.fsteamid from fs_team where fs_team.team_name = :team_name); '''
+    
+    team_obj = {
+        'team_name' : team_name
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, team_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('No Data available !!')
+        return -1
+    
+    #print(rows[0][0])
+    #print('Inside Func : ',rows)
+    return rows
+
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])
 #     id = get_actor_id(conn,artist_obj['name'])
@@ -713,21 +778,29 @@ def main():
     conn = db_con.create_connection(database)
 
     with conn:
+        
+        # user_name = input("User Name : ")
+        # team_list = get_teams_of_a_user(conn,user_name)
+        # print(team_list)
+
+        team_name = input("Team Name : ")
+        member_list = get_members_of_team(conn,team_name)
+        print(member_list)
 
         # team_name = input("Team_name: ")
-        #coins = get_tact_coins_collected_by_team_name(conn,team_name)
+        # coins = get_tact_coins_collected_by_team_name(conn,team_name)
         # coins = find_pending_coins_for_team(conn,team_name)
         # print(coins)
         #print("TEST-select all movies ")
         #select_all_movies_1(conn)
 
-        start_date = input('Start Date : ')
-        end_date = input('End Date : ')
+        #start_date = input('Start Date : ')
+        #end_date = input('End Date : ')
         # result = find_max_coins_collected_in_week_by_team(conn,start_date,end_date)
         # print('Teams which collected maximum coins in this week : ', result)
 
-        result = get_number_of_features_in_period_of_time(conn,start_date,end_date)
-        print('Number of features in a particular period of time : ',result)
+        #result = get_number_of_features_in_period_of_time(conn,start_date,end_date)
+        #print('Number of features in a particular period of time : ',result)
 
         
         

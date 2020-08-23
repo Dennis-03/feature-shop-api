@@ -125,16 +125,27 @@ select max(sumTotal) from
 ---------------------------------------------------------------------------------------------/
 
 Which team did the feature ?
+
 select fs_team.team_name from fs_team inner join fs_feature on fs_team.fsteamid = fs_feature.created_by where fs_feature.title = 'mythraki';
 
 ---------------------------------------------------------------------------------------------/
+
 How many tact coins did a feature get ?
+
 select feature_coins from fs_tact_coins join fs_feature on fs_feature.fsfeatureid = fs_tact_coins.feature_id where title = 'soul recommender';
----------------------------------------------------------------------------------------------/
-
 
 ---------------------------------------------------------------------------------------------/
 
+How many teams each member is present in ?
+
+select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id where fs_team_members.member_id = (select fs_user.fsuid 
+from fs_user where fs_user.user_name = 'Vyshnavi'); 
+
+---------------------------------------------------------------------------------------------/
+
+How many users are present in a team ?
+
+select fs_user.user_name from fs_user inner join fs_team_members on fs_user.fsuid = fs_team_members.member_id where fs_team_members.team_id = (select fs_team.fsteamid from fs_team where fs_team.team_name = 'alpha');
 
 ---------------------------------------------------------------------------------------------/
 
