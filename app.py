@@ -113,6 +113,84 @@ def login():
 
     return make_response(jsonify(res), 200)
 
+'''
+http://127.0.0.1:5000/api/get-feature-details/2
+
+'''
+@app.route("/api/get-feature-details/<feature_id>", methods=['GET'])
+def get_feature_details(feature_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_feature_details(conn,feature_id)
+
+    res = {
+        "feature_details": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/get-user-details/2
+
+'''
+@app.route("/api/get-user-details/<user_id>", methods=['GET'])
+def get_user_details(user_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_user_details(conn,user_id)
+
+    res = {
+        "user_details": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/get-user-tactcoins/2
+
+'''
+@app.route("/api/get-user-tactcoins/<user_id>", methods=['GET'])
+def get_user_tactcoins(user_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_user_tactcoins(conn,user_id)
+
+    res = {
+        "user_id": user_id,
+        "user_tactcoins": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/get-user-tactcoins-history/2
+
+'''
+@app.route("/api/get-user-tactcoins-history/<user_id>", methods=['GET'])
+def get_user_tactcoins_history(user_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_user_tactcoins_history(conn,user_id)
+
+    res = {
+        "user_id": user_id,
+        "user_tactcoins_history": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
 # '''
 # http://0.0.0.0:5001/start
 

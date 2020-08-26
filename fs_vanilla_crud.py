@@ -577,7 +577,7 @@ def get_teams_of_a_user(conn,user_id):
     # """
     
     
-    sql = ''' select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
+    sql = ''' select fs_team.fsteamid, fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
               where fs_team_members.member_id = :user_id  '''
     # sql = ''' select fs_team.team_name from fs_team inner join fs_team_members on fs_team.fsteamid = fs_team_members.team_id 
     #           where fs_team_members.member_id = (select fs_user.fsuid 
@@ -597,10 +597,14 @@ def get_teams_of_a_user(conn,user_id):
     if(len(rows) <= 0):
         print('No Data available !!')
         return -1
-    result = []
+    results = []
     for row in rows:
-        result.append(row[0])
-    return result
+        result = {
+            'team_id': row[0],
+            'team_name': row[1]
+        }
+        results.append(result)
+    return results
 
     #print(rows[0][0])
 
@@ -697,7 +701,7 @@ def get_members_of_team(conn,team_name):
 
 def get_all_features(conn):
     
-    sql = ''' select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status,fs_feature.created_at from fs_feature; '''
+    sql = ''' select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status,fs_feature.created_at,fs_feature.content from fs_feature; '''
 
     cur = conn.cursor()
     cur.execute(sql)
@@ -714,7 +718,8 @@ def get_all_features(conn):
             'fsfeatureid': row[0],
             'title': row[1],
             'status': row[2],
-            'created_at': row[3]
+            'created_at': row[3],
+            'content': row[4]
         }
         results.append(result)
     return results
@@ -747,6 +752,235 @@ def get_features_of_user(conn,user_id):
             'status': row[1]
         }
         results.append(result)
+    return results
+
+def get_feature_details(conn,feature_id):
+    
+    sql = ''' select fs_feature.fsfeatureid, fs_feature.title, fs_feature.content, 
+              fs_feature.created_by, fs_feature.created_at, fs_feature.updated_at, 
+              fs_feature.status, fs_team.team_name from fs_feature inner join fs_team on 
+              fs_feature.created_by=fs_team.fsteamid where fs_feature.fsfeatureid = :feature_id; '''
+
+    feature_obj = {
+        'feature_id' : feature_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, feature_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    results =[]
+    for row in rows:
+        result = {
+            'feature_id': row[0],
+            'title': row[1],
+            'content': row[2],
+            'team_id': row[3],
+            'created_at': row[4],
+            'updated_at': row[5],
+            'status': row[6],
+            'team_name': row[7]
+        }
+        results.append(result)
+    return results
+
+def get_user_details(conn,user_id):
+    
+    sql = ''' select fs_user.fsuid, fs_user.user_name, fs_user.email, fs_user.location, 
+              fs_user.country, fs_user.registered_at, fs_user.updated_at from fs_user where 
+              fs_user.fsuid = :user_id; '''
+
+    user_obj = {
+        'user_id' : user_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    results =[]
+    for row in rows:
+        result = {
+            'user_id': row[0],
+            'user_name': row[1],
+            'email': row[2],
+            'location': row[3],
+            'country': row[4],
+            'registered_at': row[5],
+            'updated_at': row[6]
+        }
+        results.append(result)
+    return results
+
+def get_user_details(conn,user_id):
+    
+    sql = ''' select fs_user.fsuid, fs_user.user_name, fs_user.email, fs_user.location, 
+              fs_user.country, fs_user.registered_at, fs_user.updated_at from fs_user where 
+              fs_user.fsuid = :user_id; '''
+
+    user_obj = {
+        'user_id' : user_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    results =[]
+    for row in rows:
+        result = {
+            'user_id': row[0],
+            'user_name': row[1],
+            'email': row[2],
+            'location': row[3],
+            'country': row[4],
+            'registered_at': row[5],
+            'updated_at': row[6]
+        }
+        results.append(result)
+    return results
+
+def count_team_members(conn,team_id):
+
+    sql = ''' select count(team_id) from fs_team_members where team_id = :team_id; '''
+
+    team_obj = {
+        'team_id' : team_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, team_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    return rows[0][0]
+
+def count_team_members(conn,team_id):
+
+    sql = ''' select count(team_id) from fs_team_members where team_id = :team_id; '''
+
+    team_obj = {
+        'team_id' : team_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, team_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    return rows[0][0]
+
+def get_user_tactcoins(conn,user_id):
+    
+    teams = get_teams_of_a_user(conn,user_id)
+    team_id_list = []
+    for obj in teams:
+        team_id_list.append(obj.get('team_id'))
+    total_done = 0
+    total_pending = 0
+    overall_total = 0
+    for team_id in team_id_list:
+        count = count_team_members(conn,team_id)
+        sql_done = ''' select sum(feature_coins)/:count from fs_tact_coins where status='done' and team_id=:team_id; '''
+        sql_pending = ''' select sum(feature_coins)/:count from fs_tact_coins where status='pending' and team_id=:team_id; '''
+        # sql = ''' select sum(fs_tact_coins.feature_coins) from fs_tact_coins where 
+        #           fs_tact_coins.status='done' and fs_tact_coins.team_id in (select fs_team_members.team_id 
+        #           from fs_team_members where fs_team_members.member_id = :user_id); '''
+
+        team_obj = {
+            'team_id' : team_id,
+            'count' : count
+        }
+
+        cur = conn.cursor()
+        cur.execute(sql_done, team_obj)
+
+        rows = cur.fetchall()
+
+        if(len(rows) <= 0):
+            print('No Data available')
+        else:
+            total_done+=rows[0][0]
+
+        cur = conn.cursor()
+        cur.execute(sql_pending, team_obj)
+
+        rows = cur.fetchall()
+
+        if(len(rows) <= 0):
+            print('No Data available')
+        else:
+            total_pending+=rows[0][0]
+    overall_total = total_done + total_pending
+    result = {
+        'received_tact_coins': total_done,
+        'pending_tact_coins': total_pending,
+        'total_tact_coins': overall_total
+    }
+    return result
+
+def get_user_tactcoins_history(conn,user_id):
+
+    teams = get_teams_of_a_user(conn,user_id)
+    team_id_list = []
+    results =[]
+    for obj in teams:
+        team_id_list.append(obj.get('team_id'))
+    for team_id in team_id_list:
+        count = count_team_members(conn,team_id)
+        sql = ''' select fs_tact_coins.feature_id, fs_feature.title, fs_tact_coins.feature_coins, 
+                fs_tact_coins.feature_coins/:count, fs_tact_coins.status from fs_tact_coins inner join 
+                fs_feature on fs_tact_coins.feature_id = fs_feature.fsfeatureid where 
+                fs_tact_coins.team_id = :team_id; '''
+
+        team_obj = {
+            'team_id' : team_id,
+            'count' : count
+        }
+
+        cur = conn.cursor()
+        cur.execute(sql, team_obj)
+
+        rows = cur.fetchall()
+
+        if(len(rows) <= 0):
+            print('No Data available')
+            return -1
+
+    
+        for row in rows:
+            result = {
+                'feature_id': row[0],
+                'title': row[1],
+                'team_feature_coins': row[2],
+                'user_share' : row[3],
+                'team_members_count' : count,
+                'status': row[4]
+            }
+            results.append(result)
     return results
 
 def authenticate_user(conn, email, password):
