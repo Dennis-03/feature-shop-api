@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "646e5f8e-b8dd-4a4a-b70c-ae765a19a11f",
+		"_postman_id": "e0711943-7738-4a6d-b42c-f88e34bfb47b",
 		"name": "Feature Shop",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -38,6 +38,152 @@
 						"api",
 						"get-user-details",
 						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Teams of user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-teams-of-member/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-teams-of-member",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all features",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-all-features",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-all-features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get features of user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-all-features",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-all-features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"ajay123@gmail.com\",\n    \"password\": \"12345\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user tactcoins",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-user-tactcoins/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-user-tactcoins",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Transaction History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-all-features",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-all-features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_name\": \"Sara\",\n    \"email\": \"sara123@gmail.com\",\n    \"password\" : \"test@123\",\n    \"location\": \"Chennai\",\n    \"country\": \"India\",\n    \"bio\":\"I'm a new student\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/signup",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"signup"
 					]
 				}
 			},
