@@ -1003,6 +1003,47 @@ def authenticate_user(conn, email, password):
 
     return rows[0][0],rows[0][1]
 
+def insert_user(conn, username, email, password, location, country,bio):
+    
+    sql = ''' select * from fs_user where email=:email '''
+    insert_sql  = ''' insert into fs_user(user_name,email,password, location, country,registered_at,updated_at,bio) 
+                      values (:username,:email,:password,:location,:country,:registered_at,:updated_at,:bio)'''
+
+    current_date = datetime.date.today()
+    Date = current_date.strftime("%d-%m-%Y") 
+
+    user_cred_obj = {
+        'username' : username,
+        'email' : email,
+        'password' : password,
+        'location' : location,
+        'country' : country,
+        'registered_at' : Date,
+        'updated_at' : Date,
+        'bio' : bio
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_cred_obj)
+
+    rows = cur.fetchall()
+
+    if(len(rows) <= 0):
+        cur = conn.cursor()
+        cur.execute(insert_sql, user_cred_obj)
+        conn.commit()
+        cur = conn.cursor()
+        cur.execute(sql, user_cred_obj)
+        rows = cur.fetchall()
+        return rows[0]
+    else:
+        print('Email already exists')
+        return -1
+    
+
+
+
+
 
 # def insert_into_artist_score(conn,artist_obj):
 #     print(artist_obj['name'])

@@ -65,11 +65,11 @@ def get_all_features_from_db():
 
 
 '''
-http://127.0.0.1:5000/api/get-features/2
+http://127.0.0.1:5000/api/get-features-of-user/2
 
 '''
 
-@app.route("/api/get-features/<user_id>", methods=['GET'])
+@app.route("/api/get-features-of-user/<user_id>", methods=['GET'])
 def get_features_of_user(user_id):
     # result = bc.select_all(get_db())
     conn = get_db_conn()
@@ -187,6 +187,54 @@ def get_user_tactcoins_history(user_id):
     }
     
     print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/signup
+
+'''
+
+@app.route("/api/signup", methods=['POST'])
+def signup():
+    # result = bc.select_all(get_db())
+    username = request.json['user_name']
+    email = request.json['email']
+    password = request.json['password']
+    location = request.json['location']
+    country = request.json['country']
+    bio = request.json['bio']
+
+    conn = get_db_conn()
+    row = fvc.insert_user(conn, username, email, password, location, country,bio)
+    print("user obj:",row)
+    err_msg = None
+
+    if(row == -1):
+        err_msg = 'Email already exists'
+        err_code = 1
+        res = {
+            "err_code":err_code,
+            "err_msg":err_msg
+        }
+    else:
+        err_code = 0   
+        res = {
+            "user_id": row[0],
+            "user_name": row[1],
+            "email": row[2],
+            "location":row[4],
+            "country":row[5],
+            "registered_at":row[6],
+            "updated_at":row[7],
+            "user_role":row[8],
+            "bio":row[9],
+            "err_code":err_code,
+            "err_msg":err_msg
+        }
+    
+    print("Inside Route : ",res)
 
 
     return make_response(jsonify(res), 200)
