@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "001d2b10-27cf-4f89-9dce-143166564860",
+		"_postman_id": "646e5f8e-b8dd-4a4a-b70c-ae765a19a11f",
 		"name": "Feature Shop",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -18,6 +18,25 @@
 					"path": [
 						"api",
 						"get-feature-details",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-user-details/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-user-details",
 						"2"
 					]
 				}
