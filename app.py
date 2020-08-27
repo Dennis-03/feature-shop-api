@@ -239,6 +239,112 @@ def signup():
 
     return make_response(jsonify(res), 200)
 
+
+'''
+http://127.0.0.1:5000/api/add-tactcoins
+
+'''
+
+@app.route("/api/add-tactcoins", methods=['POST'])
+def add_tactcoins():
+    # result = bc.select_all(get_db())
+    team_id = request.json['team_id']
+    tactcoins = request.json['tactcoins']
+    feature_id = request.json['feature_id']
+    comments = request.json['comments']
+
+    conn = get_db_conn()
+    row = fvc.add_tactcoins(conn, team_id, tactcoins, feature_id, comments)
+    res = {
+        "fs_tactcoins_id": row[0],
+        "team_id": row[1],
+        "feature_id": row[2],
+        "feature_coins":row[3],
+        "status":row[4],
+        "comments":row[5]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/update-user-handle
+
+'''
+
+@app.route("/api/update-user-handle", methods=['PUT'])
+def update_user_handle():
+    # result = bc.select_all(get_db())
+    user_id = request.json['user_id']
+    github_handle = request.json['github_handle']
+    linkedin_handle = request.json['linkedin_handle']
+
+    conn = get_db_conn()
+    row = fvc.update_user_handle(conn, user_id, github_handle, linkedin_handle)
+    print("user obj:",row)
+    res = {
+        "user_id": row[0],
+        "github_handle": row[10],
+        "linkedin_handle": row[11]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/update-user-handle
+
+'''
+
+@app.route("/api/update-user-bio", methods=['PUT'])
+def update_user_bio():
+    # result = bc.select_all(get_db())
+    user_id = request.json['user_id']
+    bio = request.json['bio']
+
+    conn = get_db_conn()
+    row = fvc.update_user_bio(conn, user_id, bio)
+    print("user obj:",row)
+    res = {
+        "user_id": row[0],
+        "bio": row[9]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/update-feature-status
+
+'''
+
+@app.route("/api/update-feature-status", methods=['PUT'])
+def update_feature_status():
+    # result = bc.select_all(get_db())
+    feature_id = request.json['feature_id']
+    status = request.json['status']
+
+    conn = get_db_conn()
+    row = fvc.update_feature_status(conn,feature_id, status)
+    res = {
+        "feature_id": row[2],
+        "status": row[4]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+
+
+
 # '''
 # http://0.0.0.0:5001/start
 

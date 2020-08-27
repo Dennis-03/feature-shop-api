@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e0711943-7738-4a6d-b42c-f88e34bfb47b",
+		"_postman_id": "6910d188-fe11-4a3f-9f86-1ea5320020ba",
 		"name": "Feature Shop",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -184,6 +184,114 @@
 					"path": [
 						"api",
 						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Tactcoins",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"team_id\": \"1\",\n    \"tactcoins\": \"2000\",\n    \"feature_id\" : \"13\",\n    \"comments\": \"Super feature\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/add-tactcoins",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"add-tactcoins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Handles",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"8\",\n    \"github_handle\": \"https://github.com/gokulprakash22\",\n    \"linkedin_handle\" : \"https://www.linkedin.com/in/gokulprakash22\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-user-handle",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-user-handle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Bio",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"8\",\n    \"github_handle\": \"https://github.com/gokulprakash22\",\n    \"linkedin_handle\" : \"https://www.linkedin.com/in/gokulprakash22\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-user-handle",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-user-handle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Feature Status",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-feature-status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-feature-status"
 					]
 				}
 			},

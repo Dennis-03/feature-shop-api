@@ -758,9 +758,10 @@ def get_feature_details(conn,feature_id):
     
     sql = ''' select fs_feature.fsfeatureid, fs_feature.title, fs_feature.content, 
               fs_feature.created_by, fs_feature.created_at, fs_feature.updated_at, 
-              fs_feature.status, fs_team.team_name from fs_feature inner join fs_team on 
+              fs_feature.status, fs_feature.given_by, fs_team.team_name from fs_feature inner join fs_team on 
               fs_feature.created_by=fs_team.fsteamid where fs_feature.fsfeatureid = :feature_id; '''
 
+    sql2 = ''' select fs_tact_coins.feature_coins from fs_tact_coins where fs_tact_coins.feature_id = :feature_id;'''
     feature_obj = {
         'feature_id' : feature_id
     }
@@ -774,7 +775,16 @@ def get_feature_details(conn,feature_id):
         print('No Data available')
         return -1
 
-    results =[]
+    cur = conn.cursor()
+    cur.execute(sql2, feature_obj)
+
+    feature_coins = cur.fetchall()
+
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    results = []
     for row in rows:
         result = {
             'feature_id': row[0],
@@ -784,7 +794,9 @@ def get_feature_details(conn,feature_id):
             'created_at': row[4],
             'updated_at': row[5],
             'status': row[6],
-            'team_name': row[7]
+            'given_by': row[7],
+            'team_name': row[8],
+            'feature_coins': feature_coins[0][0]
         }
         results.append(result)
     return results
@@ -822,38 +834,6 @@ def get_user_details(conn,user_id):
         results.append(result)
     return results
 
-def get_user_details(conn,user_id):
-    
-    sql = ''' select fs_user.fsuid, fs_user.user_name, fs_user.email, fs_user.location, 
-              fs_user.country, fs_user.registered_at, fs_user.updated_at from fs_user where 
-              fs_user.fsuid = :user_id; '''
-
-    user_obj = {
-        'user_id' : user_id
-    }
-
-    cur = conn.cursor()
-    cur.execute(sql, user_obj)
-
-    rows = cur.fetchall()
-
-    if(len(rows) <= 0):
-        print('No Data available')
-        return -1
-
-    results =[]
-    for row in rows:
-        result = {
-            'user_id': row[0],
-            'user_name': row[1],
-            'email': row[2],
-            'location': row[3],
-            'country': row[4],
-            'registered_at': row[5],
-            'updated_at': row[6]
-        }
-        results.append(result)
-    return results
 
 def count_team_members(conn,team_id):
 
@@ -1039,7 +1019,84 @@ def insert_user(conn, username, email, password, location, country,bio):
     else:
         print('Email already exists')
         return -1
+
+def add_tactcoins(conn, team_id, tactcoins, feature_id, comments):
     
+    sql = ''' select * from fs_tact_coins where feature_id=:feature_id '''
+    insert_sql  = ''' insert into fs_tact_coins(team_id, feature_id, feature_coins, status, comments) 
+               values (:team_id,:feature_id,:feature_coins,:status,:comments)'''
+
+    tactcoins_obj = {
+        'team_id' : team_id,
+        'feature_id' : feature_id,
+        'feature_coins' : tactcoins,
+        'status' : 'pending',
+        'comments' : comments
+    }
+
+    cur = conn.cursor()
+    cur.execute(insert_sql, tactcoins_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, tactcoins_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
+def update_user_handle(conn, user_id, github_handle, linkedin_handle):
+    
+    sql = ''' select * from fs_user where fsuid=:user_id '''
+    update_sql  = ''' update fs_user set github_handle = :github_handle , linkedin_handle = :linkedin_handle where fsuid = :user_id;'''
+
+    user_handle_obj = {
+        'user_id' : user_id,
+        'github_handle' : github_handle,
+        'linkedin_handle' : linkedin_handle
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, user_handle_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, user_handle_obj)
+    rows = cur.fetchall()
+    return rows[0]
+    
+def update_user_bio(conn, user_id, bio):
+    
+    sql = ''' select * from fs_user where fsuid=:user_id '''
+    update_sql  = ''' update fs_user set bio = :bio where fsuid = :user_id;'''
+
+    user_bio_obj = {
+        'user_id' : user_id,
+        'bio' : bio
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, user_bio_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, user_bio_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
+def update_feature_status(conn, feature_id, status):
+    
+    sql = ''' select * from fs_feature_holder where feature_id=:feature_id '''
+    update_sql  = ''' update fs_feature_holder set status = :status where feature_id = :feature_id;'''
+
+    feature_obj = {
+        'feature_id' : feature_id,
+        'status' : status
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, feature_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, feature_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
 
 
 
