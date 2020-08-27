@@ -1,0 +1,29 @@
+{
+	"info": {
+		"_postman_id": "001d2b10-27cf-4f89-9dce-143166564860",
+		"name": "Feature Shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Feature Details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/get-feature-details/2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-feature-details",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
