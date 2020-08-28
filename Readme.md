@@ -164,3 +164,6 @@ select fs_feature.title, fs_feature_holder.status from fs_feature inner join fs_
 
 
 ---------------------------------------------------------------------------------------------/
+
+
+select fs_user.user_role from fs_user where fs_user.email= 'vyshnavi123@gmail.com' and fs_user.password= '157';

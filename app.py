@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response,session
 
 import fs_vanilla_crud as fvc
 
@@ -12,6 +12,7 @@ database = zenv.DB_LOCATION
 
 app = Flask(__name__)
 
+app.secret_key = 'anyrandomstring' 
 
 def get_db_conn():
 
@@ -101,11 +102,30 @@ def login():
         authenticated = 'Invalid Credentials'
     else:
         authenticated = 'Authentication successful'
+        session['userid'] = user_id
         
     res = {
         "user_name": user_name,
         "user_id": user_id,
         "authenticated": authenticated
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/logout
+
+'''
+
+@app.route("/api/logout", methods=['POST'])
+def logout():
+    
+    session.pop('userid', None) 
+    res = {
+        'message' : 'session logged out'
     }
     
     print("Inside Route : ",res)

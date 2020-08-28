@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6910d188-fe11-4a3f-9f86-1ea5320020ba",
+		"_postman_id": "65d88319-988b-42cc-87a8-9c73a38677a9",
 		"name": "Feature Shop",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -292,6 +292,33 @@
 					"path": [
 						"api",
 						"update-feature-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/logout",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"logout"
 					]
 				}
 			},

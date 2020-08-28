@@ -804,8 +804,8 @@ def get_feature_details(conn,feature_id):
 def get_user_details(conn,user_id):
     
     sql = ''' select fs_user.fsuid, fs_user.user_name, fs_user.email, fs_user.location, 
-              fs_user.country, fs_user.registered_at, fs_user.updated_at from fs_user where 
-              fs_user.fsuid = :user_id; '''
+              fs_user.country, fs_user.registered_at, fs_user.updated_at, fs_user.user_role, fs_user.bio, fs_user.github_handle, fs_user.linkedin_handle 
+              from fs_user where fs_user.fsuid = :user_id;  '''
 
     user_obj = {
         'user_id' : user_id
@@ -829,7 +829,11 @@ def get_user_details(conn,user_id):
             'location': row[3],
             'country': row[4],
             'registered_at': row[5],
-            'updated_at': row[6]
+            'updated_at': row[6],
+            'user_role' : row[7],
+            'bio' : row[8],
+            'github_handle' : row[9],
+            'linkedin_handle' : row[10]
         }
         results.append(result)
     return results
@@ -1267,10 +1271,10 @@ def main():
         # user_name = input("User Name : ")
         # team_list = get_teams_of_a_user(conn,user_name)
         # print(team_list)
-
-        team_name = input("Team Name : ")
-        member_list = get_members_of_team(conn,team_name)
-        print(member_list)
+        get_user_details(conn, 1)
+        # team_name = input("Team Name : ")
+        # member_list = get_members_of_team(conn,team_name)
+        # print(member_list)
 
         # team_name = input("Team_name: ")
         # coins = get_tact_coins_collected_by_team_name(conn,team_name)
@@ -1297,13 +1301,13 @@ def main():
         # result = get_number_of_features_completed_by_team_name(conn, team_name)
         # print(result)
 
-        feature_name = input("Feature title: ")
+        # feature_name = input("Feature title: ")
 
         # result = get_team_name_by_feature_name(conn, feature_name)
         # print(result)
 
-        result = get_tact_coins_by_feature_name(conn, feature_name)
-        print(result)
+        # result = get_tact_coins_by_feature_name(conn, feature_name)
+        # print(result)
         #start_date = input('Start Date : ')
         #end_date = input('End Date : ')
         # result = find_max_coins_collected_in_week_by_team(conn,start_date,end_date)
