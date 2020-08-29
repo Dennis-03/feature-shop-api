@@ -100,9 +100,11 @@ def login():
 
     if(user_id == -1):
         authenticated = 'Invalid Credentials'
+        err_code = 401
     else:
         authenticated = 'Authentication successful'
         session['userid'] = user_id
+        err_code = 200
         
     res = {
         "user_name": user_name,
@@ -113,7 +115,7 @@ def login():
     print("Inside Route : ",res)
 
 
-    return make_response(jsonify(res), 200)
+    return make_response(jsonify(res), err_code)
 
 '''
 http://127.0.0.1:5000/api/logout
@@ -316,7 +318,7 @@ def update_user_handle():
     return make_response(jsonify(res), 200)
 
 '''
-http://127.0.0.1:5000/api/update-user-handle
+http://127.0.0.1:5000/api/update-user-bio
 
 '''
 
@@ -361,6 +363,40 @@ def update_feature_status():
 
 
     return make_response(jsonify(res), 200)
+
+
+
+@app.route("/api/update-user-to-admin", methods=['PUT'])
+def update_user_admin():
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    user_id = request.json['user_id']
+
+    if( fvc.isAdmin(conn,user_id) ):
+
+        to_admin = request.json['to_admin']
+
+        
+        row = fvc.update_user_to_admin(conn, to_admin)
+        
+        res = {
+            "user_id": row[0],
+            "user_name": row[1],
+            "user_role": row[8]
+        }
+        
+        print("Inside Route : ",res)
+
+
+        return make_response(jsonify(res), 200)
+    
+    res = {
+        "err_msg": "Permission denied. Only Admin can access",
+        "err_code": 403
+    }
+    
+    return make_response(jsonify(res), 403)
+    
 
 
 

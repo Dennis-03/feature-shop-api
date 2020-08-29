@@ -299,6 +299,33 @@
 			"response": []
 		},
 		{
+			"name": "Update User Role to Admin",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"6\",\n    \"to_admin\": \"7\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-user-to-admin",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-user-to-admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Session logout",
 			"request": {
 				"method": "POST",

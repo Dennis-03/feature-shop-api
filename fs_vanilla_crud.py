@@ -41,6 +41,48 @@ database = zenv.DB_LOCATION
 
 ''' SCHEMA STARTED '''
 
+def isAdmin(conn,user_id):
+
+    sql = ''' select fs_user.user_name from fs_user where fs_user.fsuid = :user_id and fs_user.user_role = 1 ; '''
+    
+    user_obj = {
+        'user_id': user_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+
+    rows = cur.fetchall()
+
+    # print('rows count : '+str(len(rows)))
+
+    if(len(rows) <= 0):
+        print('Not a admin')
+        return False
+    
+    return True
+
+
+def update_user_to_admin(conn, user_id):
+    sql = ''' select * from fs_user where fsuid = :user_id '''
+    update_sql  = ''' update fs_user set user_role = 1 where fsuid = :user_id;'''
+
+    user_obj = {
+        'user_id' : user_id,
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, user_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, user_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
+
+
+
+
 
 def create_fs_user_table_schema(conn):
     cur = conn.cursor()
