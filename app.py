@@ -1,4 +1,6 @@
-from flask import Flask, jsonify, request, make_response,session
+from flask import Flask, jsonify, request, make_response
+from flask_cors import CORS
+
 
 import fs_vanilla_crud as fvc
 
@@ -11,6 +13,7 @@ import db_con
 database = zenv.DB_LOCATION
 
 app = Flask(__name__)
+CORS(app)
 
 app.secret_key = 'anyrandomstring' 
 
