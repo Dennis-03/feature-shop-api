@@ -726,7 +726,7 @@ def get_all_features(conn):
 
 def get_features_of_user(conn,user_id):
     
-    sql = ''' select fs_feature.title, fs_feature_holder.status from fs_feature inner join 
+    sql = ''' select fs_feature.fsfeatureid, fs_feature.title, fs_feature_holder.status from fs_feature inner join 
               fs_feature_holder on fs_feature.fsfeatureid=fs_feature_holder.feature_id where 
               fs_feature.fsfeatureid in (select fs_feature_holder.feature_id from fs_feature_holder 
               where fs_feature_holder.team_id in (select fs_team_members.team_id from fs_team_members 
@@ -748,8 +748,9 @@ def get_features_of_user(conn,user_id):
     results =[]
     for row in rows:
         result = {
-            'title': row[0],
-            'status': row[1]
+            'feature_id': row[0],
+            'feature_title': row[1],
+            'feature_status': row[2]
         }
         results.append(result)
     return results
