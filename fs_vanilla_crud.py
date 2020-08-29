@@ -950,8 +950,9 @@ def get_user_tactcoins(conn,user_id):
         if(len(rows) <= 0):
             print('No Data available')
         else:
-            total_done+=rows[0][0]
-
+            if rows[0][0]:
+                total_done+=rows[0][0]
+            
         cur = conn.cursor()
         cur.execute(sql_pending, team_obj)
 
@@ -960,7 +961,8 @@ def get_user_tactcoins(conn,user_id):
         if(len(rows) <= 0):
             print('No Data available')
         else:
-            total_pending+=rows[0][0]
+            if rows[0][0]:
+                total_pending+=rows[0][0]
     overall_total = total_done + total_pending
     result = {
         'received_tact_coins': total_done,
