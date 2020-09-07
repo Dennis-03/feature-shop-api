@@ -337,27 +337,35 @@ def insert_into_fs_feature(conn,fs_feature_obj):
     cur = conn.cursor()
 
     #artist_obj['id'] = id
+    sql = ''' SELECT fsfeatureid FROM fs_feature ORDER BY fsfeatureid DESC LIMIT 1; '''
 
-    sql = ''' INSERT INTO fs_feature (
+    insert_sql = ''' INSERT INTO fs_feature (
 		title,
 		content,
-		created_by,
 		created_at,
-		updated_at)
+		updated_at,
+        given_by)
         VALUES (
         :title,
 		:content,
-		:created_by,
 		:created_at,
-		:updated_at) ''' 
+		:updated_at,
+        :given_by) ''' 
     
     try:
+        cur.execute(insert_sql,fs_feature_obj)
+        conn.commit()
         cur.execute(sql,fs_feature_obj)
+        rows = cur.fetchall()
+
+
 
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
     
-    print("fs_feature_holder Inserted successfully")
+    print("fs_feature Inserted successfully")
+    return rows[0][0]
+
 
 def insert_into_fs_feature_holder(conn,fs_feature_holder_obj):
    # print(artist_obj['name'])
@@ -382,6 +390,8 @@ def insert_into_fs_feature_holder(conn,fs_feature_holder_obj):
     
     try:
         cur.execute(sql,fs_feature_holder_obj)
+        conn.commit()
+
 
     except sqlite3.IntegrityError as sqle:
         return("SQLite error : {0}".format(sqle))
@@ -1146,164 +1156,78 @@ def update_feature_status(conn, feature_id, status):
     rows = cur.fetchall()
     return rows[0]
 
+def engage_feature(conn, feature_id, user_id):
+
+    check_sql = ''' select * from fs_feature where fsfeatureid = :feature_id ''' 
+    user_sql = ''' select team_id from fs_team_members where member_id = :user_id '''
+    update_sql  = ''' update fs_feature set status = 'Taken' where fsfeatureid = :feature_id and status = 'Available';'''
+    
+    feature_obj = {
+        'feature_id' : feature_id,
+        'user_id': user_id
+    }
+    
+    cur = conn.cursor()
+    cur.execute(check_sql, feature_obj)
+    rows = cur.fetchall()
+
+    stat = rows[0][6]
+    
+    if stat == 'Available':
+
+    
+        cur = conn.cursor()
+        cur.execute(user_sql, feature_obj)
+        rows = cur.fetchall()
+        team_id = rows[0][0]
+        current_date = datetime.date.today()
+        Date = current_date.strftime("%d-%m-%Y") 
+        fs_feature_holder_obj = {
+                
+                'team_id' : team_id,
+                'feature_id' : feature_id,
+                'added_at' : Date,
+                'status' : 'OnProcess'
+                
+                }
 
 
+        # conn.commit()
+        cur = conn.cursor()
+        cur.execute(update_sql, feature_obj)
+        conn.commit()
+        
+        insert_into_fs_feature_holder(conn,fs_feature_holder_obj)
 
+        cur = conn.cursor()
+        cur.execute(check_sql, feature_obj)
+        rows = cur.fetchall()
 
+        return rows[0]
+    
+    else:
+        return -1
 
-# def insert_into_artist_score(conn,artist_obj):
-#     print(artist_obj['name'])
-#     id = get_actor_id(conn,artist_obj['name'])
+# def update_user_handle(conn, user_id, github_handle, linkedin_handle):
+    
+#     sql = ''' select * from fs_user where fsuid=:user_id '''
+#     update_sql  = ''' update fs_user set github_handle = :github_handle , linkedin_handle = :linkedin_handle where fsuid = :user_id;'''
+
+#     user_handle_obj = {
+#         'user_id' : user_id,
+#         'github_handle' : github_handle,
+#         'linkedin_handle' : linkedin_handle
+#     }
 
 #     cur = conn.cursor()
-
-#     artist_obj['id'] = id
-
-#     sql = ''' INSERT INTO ARTIST_SCORE (ARTIST_ID,YEAR,CRITIC_SCORE,AUDIENCE_SCORE,BOX_OFFICE_SCORE,USER_IP,USERID,UPDATED_AT) 
-#               VALUES (:id,:year,:c_score,:a_score,:b_score,:user_ip,:user_id,:updated_at) ''' 
-    
-#     try:
-#         cur.execute(sql,artist_obj)
-
-#     except sqlite3.IntegrityError as sqle:
-#         return("SQLite error : {0}".format(sqle))
-    
-#     print("AS Inserted successfully")
-
-# def insert_into_public_artist(conn,public_artist_obj):
-#     print(artist_obj['name'])
-#     id = get_actor_id(conn,artist_obj['name'])
-
+#     cur.execute(update_sql, user_handle_obj)
+#     conn.commit()
 #     cur = conn.cursor()
-
-#     artist_obj['id'] = id
-
-#     sql = ''' INSERT INTO PUBLIC_ARTIST (ARTIST_NAME,ORIGINAL_NAME,DOB,LOCATION,COUNTRY,DESCRIPTION,PIC_LOCATION) 
-#               VALUES (:name,:original-_name,:dob,:location,:country,:description,:pic_loc) ''' 
-    
-#     try:
-#         cur.execute(sql,artist_obj)
-
-#     except sqlite3.IntegrityError as sqle:
-#         return("SQLite error : {0}".format(sqle))
-    
-#     print("AS Inserted successfully")
-
-
-
-# ''' DB TEAM WORK ENDED '''
-
-
-# def select_all(conn):
-#     """
-#     Query all rows in the MOVIE table
-#     :param conn: the Connection object
-#     :return:
-#     """
-#     cur = conn.cursor()
-#     cur.execute("SELECT * FROM MOVIE")
-
+#     cur.execute(sql, user_handle_obj)
 #     rows = cur.fetchall()
-
-#     # return('rows count : '+str(len(rows)))
-
-#     if(len(rows) <= 0):
-#         return('No Data available')
-#     return rows
-#     # for row in rows:
-#     #     print(row)
+#     return rows[0]
 
 
-# def select_all_by_actor(conn, actor_name):
-#     """
-#     Query all rows in the MOVIE table
-#     :param conn: the Connection object
-#     :return:
-#     """
-#     cur = conn.cursor()
-#     cur.execute(
-#         "SELECT * FROM COARTIST_BUBBLE WHERE ARTIST_NAME LIKE '%"+actor_name+"%'")
-
-#     rows = cur.fetchall()
-
-#     #print('rows count : '+str(len(rows)))
-
-#     if(len(rows) <= 0):
-#         return('No Data available')
-
-#     for row in rows:
-#         return(row)
-
-
-# def add_coartist_bubble(conn, bubble_obj):
-#     """
-#     Create a movie
-#     :param task:
-#     :return: task id
-#     """
-
-#     sql = ''' INSERT INTO COARTIST_BUBBLE (ARTIST_NAME, COARTIST_CATEGORY, COARTIST_NAME, BUBBLE_SCORE) 
-#             VALUES (:artist_name, :coartist_category, :coartist_name, :bubble_score) '''
-#     cur = conn.cursor()
-
-#     lastrowid = -1
-#     try:
-#         cur.execute(sql, bubble_obj)
-
-#         lastrowid = cur.lastrowid
-#     except sqlite3.IntegrityError as sqle:
-#         return("SQLite error : {0}".format(sqle))
-#     finally:
-#         conn.commit()
-
-#     return lastrowid
-
-
-# def update_movie(conn, bubble_obj):
-#     """
-#     Create a movie
-#     :param movie object:
-#     :return: None
-#     """
-
-#     sql = ''' UPDATE MOVIE
-#     SET MOVIE_NAME = :new_name, 
-#     STARRING = :starring,
-#     RELEASE_DATE = :release_date 
-#     WHERE MOVIE_NAME = :name '''
-#     cur = conn.cursor()
-
-#     try:
-#         cur.execute(sql, bubble_obj)
-
-#     except sqlite3.IntegrityError as sqle:
-#         return("SQLite error : {0}".format(sqle))
-#     finally:
-#         conn.commit()
-
-#     return('Updated')
-
-
-# def delete_movie(conn, name):
-#     """
-#     Delete a movie
-#     :param movie object:
-#     :return: None
-#     """
-
-#     sql = ''' DELETE FROM MOVIE    
-#     WHERE MOVIE_NAME = ?'''
-#     cur = conn.cursor()
-
-#     try:
-#         cur.execute(sql, (name,))
-
-#     except sqlite3.IntegrityError as sqle:
-#         return("SQLite error : {0}".format(sqle))
-#     finally:
-#         conn.commit()
-
-#     return('Deleted')
 
 
 def main():
@@ -1312,11 +1236,12 @@ def main():
     conn = db_con.create_connection(database)
 
     with conn:
+        pass
         
         # user_name = input("User Name : ")
         # team_list = get_teams_of_a_user(conn,user_name)
         # print(team_list)
-        get_user_details(conn, 1)
+        #get_user_details(conn, 1)
         # team_name = input("Team Name : ")
         # member_list = get_members_of_team(conn,team_name)
         # print(member_list)
@@ -1438,15 +1363,15 @@ def main():
         #     created_by = input('created by:')
         #     created_at = input('created at :')
         #     updated_at = input('updated at:')
-        #     fs_feature_obj = {
+            # fs_feature_obj = {
             
-        #     'title' : title,
-        #     'content' : content,
-        #     'created_by' : created_by,
-        #     'created_at' : created_at,
-        #     'updated_at' : updated_at
+            # 'title' : title,
+            # 'content' : content,
+            # 'created_by' : created_by,
+            # 'created_at' : created_at,
+            # 'updated_at' : updated_at
             
-        #     }
+            # }
         #     #print("Insert stmt test")
         #     insert_into_fs_feature(conn, fs_feature_obj)
         # for i in range(6):
@@ -1456,14 +1381,14 @@ def main():
         #     added_at = input('added_at:')
         #     status = input('status :')
             
-        #     fs_feature_holder_obj = {
+            # fs_feature_holder_obj = {
             
-        #     'team_id' : team_id,
-        #     'feature_id' : feature_id,
-        #     'added_at' : added_at,
-        #     'status' : status
+            # 'team_id' : team_id,
+            # 'feature_id' : feature_id,
+            # 'added_at' : added_at,
+            # 'status' : status
             
-        #     }
+            # }
         #     #print("Insert stmt test")
         #     insert_into_fs_feature_holder(conn, fs_feature_holder_obj)
         # for i in range(6):

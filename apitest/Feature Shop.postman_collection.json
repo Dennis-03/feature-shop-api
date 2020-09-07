@@ -299,6 +299,33 @@
 			"response": []
 		},
 		{
+			"name": "Engage feature",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-feature-status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-feature-status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Update User Role to Admin",
 			"request": {
 				"method": "PUT",
@@ -347,6 +374,33 @@
 					"path": [
 						"api",
 						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add New Feature (Admin)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": \"5\",\n    \"title\": \"Mythraki V2.0\",\n    \"content\": \"Improving Mythraki translator\",\n    \"given_by\": \"Raja CSP\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/add-new-feature",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"add-new-feature"
 					]
 				}
 			},

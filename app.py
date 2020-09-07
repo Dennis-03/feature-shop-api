@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 
 import fs_vanilla_crud as fvc
-
+import datetime
 # import sqlite3
 # from sqlite3 import Error
 
@@ -344,28 +344,28 @@ def update_user_bio():
 
     return make_response(jsonify(res), 200)
 
-'''
-http://127.0.0.1:5000/api/update-feature-status
+# '''
+# http://127.0.0.1:5000/api/update-feature-status
 
-'''
+# '''
 
-@app.route("/api/update-feature-status", methods=['PUT'])
-def update_feature_status():
-    # result = bc.select_all(get_db())
-    feature_id = request.json['feature_id']
-    status = request.json['status']
+# @app.route("/api/update-feature-status", methods=['PUT'])
+# def update_feature_status():
+#     # result = bc.select_all(get_db())
+#     feature_id = request.json['feature_id']
+#     status = request.json['status']
 
-    conn = get_db_conn()
-    row = fvc.update_feature_status(conn,feature_id, status)
-    res = {
-        "feature_id": row[2],
-        "status": row[4]
-    }
+#     conn = get_db_conn()
+#     row = fvc.update_feature_status(conn,feature_id, status)
+#     res = {
+#         "feature_id": row[2],
+#         "status": row[4]
+#     }
     
-    print("Inside Route : ",res)
+#     print("Inside Route : ",res)
 
 
-    return make_response(jsonify(res), 200)
+#     return make_response(jsonify(res), 200)
 
 
 
@@ -401,8 +401,109 @@ def update_user_admin():
     return make_response(jsonify(res), 403)
     
 
+'''
+http://127.0.0.1:5000/api/update-feature-status
+
+'''
+
+@app.route("/api/update-feature-status", methods=['PUT'])
+def update_feature_status():
+    # result = bc.select_all(get_db())
+    feature_id = request.json['feature_id']
+    status = request.json['status']
+
+    conn = get_db_conn()
+    row = fvc.update_feature_status(conn,feature_id, status)
+    res = {
+        "feature_id": row[2],
+        "status": row[4]
+    }
+    
+    print("Inside Route : ",res)
 
 
+    return make_response(jsonify(res), 200)
+
+
+
+
+'''
+http://127.0.0.1:5000/api/engage-feature
+
+'''
+
+@app.route("/api/engage-feature", methods=['PUT'])
+def engage_feature_api():
+    # result = bc.select_all(get_db())
+    feature_id = request.json['feature_id']
+    user_id = request.json['user_id']
+
+    conn = get_db_conn()
+    row = fvc.engage_feature(conn,feature_id,user_id)
+    if row == -1:
+        res = {
+            "error_msg": "Feature Already taken !!!",
+            "error_code": 403,
+        }
+        return make_response(jsonify(res), 403)
+    
+    res = {
+        "feature_id": row[0],
+        "status": row[6]
+    }
+    
+    # print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+
+@app.route("/api/add-new-feature", methods=['POST'])
+def add_new_feature():
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    user_id = request.json['user_id']
+
+    if( fvc.isAdmin(conn,user_id) ):
+        
+        title = request.json['title']
+        content = request.json['content']
+        given_by = request.json['given_by']
+
+        current_date = datetime.date.today()
+
+        Date = current_date.strftime("%d-%m-%Y") 
+
+        
+        fs_feature_obj = {
+            
+            'title' : title,
+            'content' : content,
+            'created_at' : Date,
+            'updated_at' : Date,
+            'given_by': given_by
+        }
+
+        
+
+        
+        new_feature_id = fvc.insert_into_fs_feature(conn,fs_feature_obj)
+        
+        res = {
+            "feature_id": new_feature_id,
+        }
+        
+        print("Inside Route : ",res)
+
+
+        return make_response(jsonify(res), 200)
+    
+    res = {
+        "err_msg": "Permission denied. Only Admin can access",
+        "err_code": 403
+    }
+    
+    return make_response(jsonify(res), 403)
 
 # '''
 # http://0.0.0.0:5001/start
@@ -743,4 +844,5 @@ def update_user_admin():
 
 
 if __name__ == "__main__":
+    
     app.run(debug=True)
