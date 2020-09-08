@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6d55d72d-284c-4ad9-aaf8-86daa4ee8a89",
+		"_postman_id": "0429d73d-e3a2-451b-8c11-cd4984f77bd0",
 		"name": "Feature Shop",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -86,14 +86,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/get-features-of-user/2",
+					"raw": "{{base_url}}/api/get-all-features",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"get-features-of-user",
-						"2"
+						"get-all-features"
 					]
 				}
 			},
@@ -106,7 +105,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"ajay123@gmail.com\",\n    \"password\": \"12345\"\n}",
+					"raw": "{\n    \"email\": \"priya3@gmail.com\",\n    \"password\": \"12345\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -251,7 +250,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user_id\": \"8\",\n    \"bio\": \"I'm new student.\"\n\n }",
+					"raw": "{\n    \"user_id\": \"8\",\n    \"github_handle\": \"https://github.com/gokulprakash22\",\n    \"linkedin_handle\" : \"https://www.linkedin.com/in/gokulprakash22\"\n }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -259,13 +258,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/api/update-user-bio",
+					"raw": "{{base_url}}/api/update-user-handle",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"update-user-bio"
+						"update-user-handle"
 					]
 				}
 			},
@@ -299,60 +298,6 @@
 			"response": []
 		},
 		{
-			"name": "Engage feature",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/api/update-feature-status",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"update-feature-status"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update User Role to Admin",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"user_id\": \"6\",\n    \"to_admin\": \"7\"\n }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{base_url}}/api/update-user-to-admin",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"update-user-to-admin"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Session logout",
 			"request": {
 				"method": "POST",
@@ -380,13 +325,16 @@
 			"response": []
 		},
 		{
-			"name": "Add New Feature (Admin)",
+			"name": "Get all features given by Admin",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"user_id\": \"5\",\n    \"title\": \"Mythraki V2.0\",\n    \"content\": \"Improving Mythraki translator\",\n    \"given_by\": \"Raja CSP\"\n }",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -394,17 +342,40 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/api/add-new-feature",
+					"raw": "{{base_url}}/api/get-features-by-admin/14",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"add-new-feature"
+						"get-features-by-admin",
+						"14"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b71bfa59-6a1c-4e7b-b5d4-a8e247264695",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "13a353d7-ede4-440c-b283-4e52b5149e3e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"protocolProfileBehavior": {}

@@ -1038,8 +1038,8 @@ def authenticate_user(conn, email, password):
 
     if(len(rows) <= 0):
         print('Invalid credentials')
-        return -1,None
-
+        return -1,None,None
+    print(rows)
     return rows[0][0],rows[0][1],rows[0][2]
 
 def insert_user(conn, username, email, password, location, country,bio):

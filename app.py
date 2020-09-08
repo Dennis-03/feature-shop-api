@@ -99,7 +99,8 @@ def login():
     email = request.json['email']
     password = request.json['password']
     conn = get_db_conn()
-    user_id, user_name, user_role = fvc.authenticate_user(conn, email, password,user_role)
+    user_id, user_name, user_role = fvc.authenticate_user(conn, email, password)
+    print("printing....",user_id,user_name,user_role)
     is_admin = None
     if(user_role == 1):
         is_admin = True
