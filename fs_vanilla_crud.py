@@ -1024,7 +1024,7 @@ def get_user_tactcoins_history(conn,user_id):
 
 def authenticate_user(conn, email, password):
     
-    sql = ''' select fsuid,user_name from fs_user where email=:email and password=:password '''
+    sql = ''' select fsuid,user_name,user_role from fs_user where email=:email and password=:password '''
 
     user_cred_obj = {
         'email' : email,
@@ -1040,7 +1040,7 @@ def authenticate_user(conn, email, password):
         print('Invalid credentials')
         return -1,None
 
-    return rows[0][0],rows[0][1]
+    return rows[0][0],rows[0][1],rows[0][2]
 
 def insert_user(conn, username, email, password, location, country,bio):
     

@@ -99,8 +99,13 @@ def login():
     email = request.json['email']
     password = request.json['password']
     conn = get_db_conn()
-    user_id, user_name = fvc.authenticate_user(conn, email, password)
-
+    user_id, user_name, user_role = fvc.authenticate_user(conn, email, password,user_role)
+    is_admin = None
+    if(user_role == 1):
+        is_admin = True
+    else:
+        is_admin = False
+    
     if(user_id == -1):
         authenticated = 'Invalid Credentials'
         err_code = 401
@@ -112,7 +117,9 @@ def login():
     res = {
         "user_name": user_name,
         "user_id": user_id,
+        "is_admin": is_admin,
         "authenticated": authenticated
+
     }
     
     print("Inside Route : ",res)
