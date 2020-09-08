@@ -164,6 +164,26 @@ def get_feature_details(feature_id):
 
     return make_response(jsonify(res), 200)
 
+
+'''
+http://127.0.0.1:5000/api/get-features-by-admin/14
+
+'''
+@app.route("/api/get-features-by-admin/<user_id>", methods=['GET'])
+def get_features_by_admin(user_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_all_features_by_admin(conn,user_id)
+
+    res = {
+        "feature_details": result
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
 '''
 http://127.0.0.1:5000/api/get-user-details/2
 

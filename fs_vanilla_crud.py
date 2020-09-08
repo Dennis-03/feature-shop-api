@@ -1208,6 +1208,31 @@ def engage_feature(conn, feature_id, user_id):
     else:
         return -1
 
+
+def get_all_features_by_admin(conn,user_id):
+
+    sql = '''select fs_feature.fsfeatureid,fs_feature.title from fs_feature where fs_feature.given_by in (SELECT fs_user.user_name from fs_user where fs_user.fsuid = :user_id)'''
+
+    user_obj = {
+        'user_id' : user_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql,user_obj)
+    rows = cur.fetchall()
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+
+    results = []
+    for row in rows:
+        result = {
+            'feature_id': row[0],
+            'title': row[1],
+        }
+        results.append(result)
+    return results
+
 # def update_user_handle(conn, user_id, github_handle, linkedin_handle):
     
 #     sql = ''' select * from fs_user where fsuid=:user_id '''
