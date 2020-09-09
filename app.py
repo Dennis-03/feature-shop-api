@@ -166,6 +166,7 @@ def get_feature_details(feature_id):
     return make_response(jsonify(res), 200)
 
 
+
 '''
 http://127.0.0.1:5000/api/get-features-by-admin/14
 

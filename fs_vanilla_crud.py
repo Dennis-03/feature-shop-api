@@ -1211,7 +1211,7 @@ def engage_feature(conn, feature_id, user_id):
 
 def get_all_features_by_admin(conn,user_id):
 
-    sql = '''select fs_feature.fsfeatureid,fs_feature.title from fs_feature where fs_feature.given_by in (SELECT fs_user.user_name from fs_user where fs_user.fsuid = :user_id)'''
+    sql = '''select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status from fs_feature where fs_feature.given_by in (SELECT fs_user.user_name from fs_user where fs_user.fsuid = :user_id)'''
 
     user_obj = {
         'user_id' : user_id
@@ -1229,6 +1229,7 @@ def get_all_features_by_admin(conn,user_id):
         result = {
             'feature_id': row[0],
             'title': row[1],
+            'status' :row[2]
         }
         results.append(result)
     return results
