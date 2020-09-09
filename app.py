@@ -165,6 +165,30 @@ def get_feature_details(feature_id):
 
     return make_response(jsonify(res), 200)
 
+'''
+http://127.0.0.1:5000/api/update-feature-details/2
+
+'''
+@app.route("/api/update-feature-details/<feature_id>", methods=['PUT'])
+def update_feature_details(feature_id):
+    # result = bc.select_all(get_db())
+    title = request.json['title']
+    content = request.json['content']
+    coins = request.json['coins']
+
+    conn = get_db_conn()
+    id = fvc.update_feature_details(conn, feature_id,title,content,coins)
+    res = {
+        "feature_id": id,
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+
+
 
 
 '''

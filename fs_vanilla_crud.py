@@ -1209,6 +1209,25 @@ def engage_feature(conn, feature_id, user_id):
         return -1
 
 
+def update_feature_details(conn,feature_id,title,content,coins):
+    content_update_sql = '''update fs_feature set title = :title,content = :content where fsfeatureid = :feature_id'''
+    coins_update_sql = '''update fs_tact_coins set feature_coins = :coins where feature_id = :feature_id'''
+
+    feature_obj = {
+        'feature_id' : feature_id,
+        'title' : title,
+        'content' : content,
+        'coins' : coins
+    }
+
+    cur = conn.cursor()
+    cur.execute(content_update_sql, feature_obj)
+    conn.commit()
+
+    cur.execute(coins_update_sql, feature_obj)
+    conn.commit()
+    return feature_id
+
 def get_all_features_by_admin(conn,user_id):
 
     sql = '''select fs_feature.fsfeatureid,fs_feature.title,fs_feature.status from fs_feature where fs_feature.given_by in (SELECT fs_user.user_name from fs_user where fs_user.fsuid = :user_id)'''
