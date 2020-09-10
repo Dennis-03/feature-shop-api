@@ -271,13 +271,13 @@
 			"response": []
 		},
 		{
-			"name": "Update Feature Status",
+			"name": "Update Feature Progress",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Completed\"\n }",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"OnProcess\"\n }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -285,13 +285,40 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/api/update-feature-status",
+					"raw": "{{base_url}}/api/update-feature-progress",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
-						"update-feature-status"
+						"update-feature-progress"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Feature Availability",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"feature_id\": \"10\",\n    \"status\": \"Available\"\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-feature-availability",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-feature-availability"
 					]
 				}
 			},
@@ -350,6 +377,65 @@
 						"api",
 						"get-features-by-admin",
 						"14"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get feature links",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/get-feature-links/3",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"get-feature-links",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update feature links",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"primary_link\": \"link1\",\n    \"secondary_links\": \"link2,link3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/update-feature-links/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"update-feature-links",
+						"1"
 					]
 				}
 			},

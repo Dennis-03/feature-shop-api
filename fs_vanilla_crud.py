@@ -891,6 +891,41 @@ def get_user_details(conn,user_id):
         results.append(result)
     return results
 
+def get_feature_links(conn,feature_id):
+    sql = ''' select primary_link,secondary_links from fs_feature_holder where feature_id = :feature_id '''
+
+    feature_obj = {
+        'feature_id' : feature_id
+    }
+
+    cur = conn.cursor()
+    cur.execute(sql, feature_obj)
+
+    rows = cur.fetchall()
+    print("printing rows",rows)
+    if(len(rows) <= 0):
+        print('No Data available')
+        return -1
+    return rows
+
+def update_feature_links(conn,feature_id,primary_link,secondary_links):
+    sql = ''' select primary_link,secondary_links from fs_feature_holder where feature_id = :feature_id '''
+    update_sql = ''' update fs_feature_holder set primary_link = :primary_link,secondary_links = :secondary_links where feature_id = :feature_id '''
+
+    feature_obj = {
+        'feature_id' : feature_id,
+        'primary_link' : primary_link,
+        'secondary_links' : secondary_links
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, feature_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, feature_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
 
 def count_team_members(conn,team_id):
 

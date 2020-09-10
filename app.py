@@ -501,6 +501,53 @@ def update_feature_availability():
     return make_response(jsonify(res), 200)
 
 
+'''
+http://127.0.0.1:5000/api/get-feature-links/<feature_id>
+
+'''
+
+@app.route("/api/get-feature-links/<feature_id>", methods=['GET'])
+def get_feature_links(feature_id):
+    # result = bc.select_all(get_db())
+    conn = get_db_conn()
+    result = fvc.get_feature_links(conn,feature_id)
+
+    res = {
+        "feature_id": feature_id,
+        "primary_link": result[0][0],
+        "secondary_links":result[0][1]
+    }
+    
+    print("Inside Route : ",result)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/update-feature-links/<feature_id>
+
+'''
+
+@app.route("/api/update-feature-links/<feature_id>", methods=['PUT'])
+def update_feature_links(feature_id):
+    
+    primary_link = request.json['primary_link']
+    secondary_links = request.json['secondary_links']
+
+    conn = get_db_conn()
+    row = fvc.update_feature_links(conn,feature_id, primary_link,secondary_links)
+    res = {
+        "feature_id":feature_id,
+        "primary_link":row[0],
+        "secondary_link":row[1]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+
 
 
 '''
