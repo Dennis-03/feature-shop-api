@@ -1138,10 +1138,28 @@ def update_user_bio(conn, user_id, bio):
     rows = cur.fetchall()
     return rows[0]
 
-def update_feature_status(conn, feature_id, status):
+def update_feature_progress(conn, feature_id, status):
     
     sql = ''' select * from fs_feature_holder where feature_id=:feature_id '''
     update_sql  = ''' update fs_feature_holder set status = :status where feature_id = :feature_id;'''
+
+    feature_obj = {
+        'feature_id' : feature_id,
+        'status' : status
+    }
+
+    cur = conn.cursor()
+    cur.execute(update_sql, feature_obj)
+    conn.commit()
+    cur = conn.cursor()
+    cur.execute(sql, feature_obj)
+    rows = cur.fetchall()
+    return rows[0]
+
+def update_feature_availability(conn, feature_id, status):
+    
+    sql = ''' select * from fs_feature where fsfeatureid=:feature_id '''
+    update_sql  = ''' update fs_feature set status = :status where fsfeatureid = :feature_id;'''
 
     feature_obj = {
         'feature_id' : feature_id,

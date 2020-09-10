@@ -455,21 +455,44 @@ def update_user_admin():
     
 
 '''
-http://127.0.0.1:5000/api/update-feature-status
+http://127.0.0.1:5000/api/update-feature-status/
 
 '''
 
-@app.route("/api/update-feature-status", methods=['PUT'])
-def update_feature_status():
+@app.route("/api/update-feature-progress", methods=['PUT'])
+def update_feature_progress():
     # result = bc.select_all(get_db())
     feature_id = request.json['feature_id']
     status = request.json['status']
 
     conn = get_db_conn()
-    row = fvc.update_feature_status(conn,feature_id, status)
+    row = fvc.update_feature_progress(conn,feature_id, status)
     res = {
         "feature_id": row[2],
         "status": row[4]
+    }
+    
+    print("Inside Route : ",res)
+
+
+    return make_response(jsonify(res), 200)
+
+'''
+http://127.0.0.1:5000/api/update-feature-status/
+
+'''
+
+@app.route("/api/update-feature-availability", methods=['PUT'])
+def update_feature_availability():
+    # result = bc.select_all(get_db())
+    feature_id = request.json['feature_id']
+    status = request.json['status']
+
+    conn = get_db_conn()
+    row = fvc.update_feature_availability(conn,feature_id, status)
+    res = {
+        "feature_id": row[0],
+        "status": row[6]
     }
     
     print("Inside Route : ",res)
