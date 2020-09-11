@@ -15,6 +15,8 @@ import sqlite3
 import random
 from sqlite3 import Error
 import datetime
+import requests
+import json
 
 import zenv
 import db_con
@@ -875,6 +877,22 @@ def get_user_details(conn,user_id):
 
     results =[]
     for row in rows:
+        try:
+            handle = row[9].split('/')
+            handle = handle[-1]
+            req = requests.get('https://github-turtle-score.herokuapp.com/api?gitlink={}'.format(handle))
+            result = json.loads(req.content)
+            git_score = result.get('git_turtle_score')
+            req = requests.get('http://ml-score.herokuapp.com/api/{}'.format(handle))
+            result = json.loads(req.content)
+            ml_score = result.get('ML_Score')
+            if(git_score == -1):
+                git_score = 0
+            if(ml_score == -1):
+                ml_score = 0
+        except:
+            git_score = 0
+            ml_score = 0
         result = {
             'user_id': row[0],
             'user_name': row[1],
@@ -886,7 +904,9 @@ def get_user_details(conn,user_id):
             'user_role' : row[7],
             'bio' : row[8],
             'github_handle' : row[9],
-            'linkedin_handle' : row[10]
+            'linkedin_handle' : row[10],
+            'git_score' : git_score,
+            'ml_score' : ml_score
         }
         results.append(result)
     return results
