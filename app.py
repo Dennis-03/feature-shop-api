@@ -563,6 +563,8 @@ def engage_feature_api():
 
     conn = get_db_conn()
     row = fvc.engage_feature(conn,feature_id,user_id)
+    
+    print("printing rows======>",row)
     if row == -1:
         res = {
             "error_msg": "Feature Already taken !!!",
@@ -571,8 +573,8 @@ def engage_feature_api():
         return make_response(jsonify(res), 403)
     
     res = {
-        "feature_id": row[0],
-        "status": row[6]
+        "feature_id": row[0][0],
+        "status": row[0][6]
     }
     
     # print("Inside Route : ",res)
