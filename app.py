@@ -591,7 +591,7 @@ def add_new_feature():
         
         title = request.json['title']
         content = request.json['content']
-        given_by = request.json['given_by']
+        coins = request.json['coins']
 
         current_date = datetime.date.today()
 
@@ -604,7 +604,8 @@ def add_new_feature():
             'content' : content,
             'created_at' : Date,
             'updated_at' : Date,
-            'given_by': given_by
+            'coins': coins,
+            'given_by': user_id
         }
 
         

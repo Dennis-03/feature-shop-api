@@ -346,12 +346,14 @@ def insert_into_fs_feature(conn,fs_feature_obj):
 		content,
 		created_at,
 		updated_at,
+        coins,
         given_by)
         VALUES (
         :title,
 		:content,
 		:created_at,
 		:updated_at,
+        :coins,
         :given_by) ''' 
     
     try:
@@ -810,30 +812,29 @@ def get_features_of_user(conn,user_id):
     return results
 
 def get_feature_details(conn,feature_id):
-    
-    sql = ''' select fs_feature.fsfeatureid, fs_feature.title, fs_feature.content, 
-              fs_feature.created_by, fs_feature.created_at, fs_feature.updated_at, 
-              fs_feature.status, fs_feature.given_by, fs_team.team_name from fs_feature inner join fs_team on 
-              fs_feature.created_by=fs_team.fsteamid where fs_feature.fsfeatureid = :feature_id; '''
+    user_sql = '''SELECT user_name from fs_user where fsuid=:user_id;'''
+    sql = ''' select * FROM fs_feature where fsfeatureid = :feature_id; '''
 
-    sql2 = ''' select fs_tact_coins.feature_coins from fs_tact_coins where fs_tact_coins.feature_id = :feature_id;'''
+    
     feature_obj = {
         'feature_id' : feature_id
     }
-
     cur = conn.cursor()
     cur.execute(sql, feature_obj)
 
     rows = cur.fetchall()
+    user_obj = {
+        'user_id' : rows[0][7]
+    }
 
     if(len(rows) <= 0):
         print('No Data available')
         return -1
 
     cur = conn.cursor()
-    cur.execute(sql2, feature_obj)
-
-    feature_coins = cur.fetchall()
+    cur.execute(user_sql, user_obj)
+    user_name = cur.fetchall()
+    user_name = user_name[0][0]
 
     if(len(rows) <= 0):
         print('No Data available')
@@ -849,9 +850,9 @@ def get_feature_details(conn,feature_id):
             'created_at': row[4],
             'updated_at': row[5],
             'status': row[6],
-            'given_by': row[7],
-            'team_name': row[8],
-            'feature_coins': feature_coins[0][0]
+            'given_by_user_id': row[7],
+            'given_by_user_name':user_name,
+            'coins': row[8]
         }
         results.append(result)
     return results
