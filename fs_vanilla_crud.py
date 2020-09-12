@@ -1233,7 +1233,7 @@ def engage_feature(conn, feature_id, user_id):
 
     check_sql = ''' select * from fs_feature where fsfeatureid = :feature_id ''' 
     user_sql = ''' select team_id from fs_team_members where member_id = :user_id '''
-    update_sql  = ''' update fs_feature set status = 'Taken' where fsfeatureid = :feature_id and status = 'Available';'''
+    #update_sql  = ''' update fs_feature set status = 'Taken' where fsfeatureid = :feature_id and status = 'Available';'''
     
     feature_obj = {
         'feature_id' : feature_id,
@@ -1266,15 +1266,12 @@ def engage_feature(conn, feature_id, user_id):
 
 
         # conn.commit()
-        cur = conn.cursor()
-        cur.execute(update_sql, feature_obj)
-        conn.commit()
         
         insert_into_fs_feature_holder(conn,fs_feature_holder_obj)
 
-        cur = conn.cursor()
-        cur.execute(check_sql, feature_obj)
-        rows = cur.fetchall()
+        # cur = conn.cursor()
+        # cur.execute(check_sql, feature_obj)
+        # rows = cur.fetchall()
 
         return rows[0]
     
