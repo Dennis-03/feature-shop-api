@@ -1242,14 +1242,15 @@ def engage_feature(conn, feature_id, user_id):
     cur = conn.cursor()
     cur.execute(check_sql, feature_obj)
     rows = cur.fetchall()
-
+    
     #stat = rows[0][6]
     #if stat == 'Available':
 
     
     cur = conn.cursor()
+    print("printing rows ------>",rows)
     cur.execute(user_sql, feature_obj)
-    rows = cur.fetchall()
+    # rows = cur.fetchall()
     team_id = rows[0][0]
     current_date = datetime.date.today()
     Date = current_date.strftime("%d-%m-%Y") 
@@ -1270,8 +1271,8 @@ def engage_feature(conn, feature_id, user_id):
     # cur = conn.cursor()
     # cur.execute(check_sql, feature_obj)
     # rows = cur.fetchall()
-
-    return rows[0]
+    
+    return rows
 
 
 def update_feature_details(conn,feature_id,title,content,coins):
